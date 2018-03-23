@@ -34,13 +34,27 @@ def erode_img(img):
     er_img = cv2.dilate(img,kernel,iterations=1)
     return er_img
 
+"""Contour adn region finding stuff goes here"""
+def find_and_draw_contours(img, src):
+    """save contours and draw them into the image"""
+    im2, contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    #show(['bla'],[im2])
+    print('number of contours found: ', len(contours))
+    #get conves hull
+    hull = cv2.convexHull(contours[5])
+    src = cv2.cvtColor(src=src, code=cv2.COLOR_GRAY2BGR)
+    cv2.drawContours(src, contours, -1, (0, 0, 250),1)
+    return src
+
+
 if __name__ == '__main__':
    path = 'img/mean.png'
    img  = load_img(path, 0)
    #make binary
    b_img = make_binary(img)
    #erode
-   er_img = erode_img(b_img)
+   #er_img = erode_img(b_img)
    #show all
-   show(['original','binary','eroded'], [img,b_img,er_img])
-
+   c_img = find_and_draw_contours(b_img, img)
+   show(['original','binary','contours'], [img,b_img,c_img])
